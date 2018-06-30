@@ -3,12 +3,12 @@ self.addEventListener('install', function(event) {
     caches.open('v1').then(function(cache) {
       return cache.addAll([
         './',
-        './ChallengeFin/index.html',
-        './ChallengeFin/app.js',
-        './ChallengeFin/idb.js',
-        './ChallengeFin/sw.js',
-        './ChallengeFin/index.js',        
-        './ChallengeFin/image-list.js',
+        './index.html',
+        './app.js',
+        './idb.js',
+        './sw.js',
+        './index.js',        
+        './image-list.js',
         // '/ChallengeFin/css/bootstrap.css',
         // '/ChallengeFin/css/bootstrap.min.css',
         // '/ChallengeFin/css/mdb.css',
