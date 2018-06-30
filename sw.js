@@ -2,13 +2,13 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('v1').then(function(cache) {
       return cache.addAll([
-        '/ChallengeFin/',
-        '/ChallengeFin/index.html',
-        '/ChallengeFin/app.js',
-        '/ChallengeFin/idb.js',
-        '/ChallengeFin/sw.js',
-        '/ChallengeFin/index.js',        
-        '/ChallengeFin/image-list.js',
+        './',
+        './ChallengeFin/index.html',
+        './ChallengeFin/app.js',
+        './ChallengeFin/idb.js',
+        './ChallengeFin/sw.js',
+        './ChallengeFin/index.js',        
+        './ChallengeFin/image-list.js',
         // '/ChallengeFin/css/bootstrap.css',
         // '/ChallengeFin/css/bootstrap.min.css',
         // '/ChallengeFin/css/mdb.css',
@@ -91,7 +91,7 @@ self.addEventListener('fetch', function(event) {
         });
         return response;
       }).catch(function () {
-        return caches.match('/ChallengeFin/img/bg-7.jpg');
+        return caches.match('./img/bg-7.jpg');
       });
     }
   }));
