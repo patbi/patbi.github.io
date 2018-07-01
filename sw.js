@@ -13,7 +13,6 @@ let filesToCache = [
     './css/mdb.min.css',
     './css/style.css',
     './css/style.min.css',
-    'https://free.currencyconverterapi.com/api/v5/currencies',
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
 // './font/Roboto-Bold.eot',
 // './font/Roboto-Bold.ttf',
