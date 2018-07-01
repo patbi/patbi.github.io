@@ -1,170 +1,140 @@
-// variable declarations
+let log = console.log.bind(console);//bind our console to a variable
+let version = "0.0.1";
+let cacheName = "ChallengeFinBIYAGA";
+let cache = cacheName + "-" + version;
+let filesToCache = [
+    './',
+    './index.html',
+    './app.js',
+    './idb.js',
+    './css/bootstrap.css',
+    './css/bootstrap.min.css',
+    './css/mdb.css',
+    './css/mdb.min.css',
+    './css/style.css',
+    './css/style.min.css',
+    // 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+    // 'https://mdbootstrap.com/material-design-for-bootstrap/',
+    './img/01.jpg',
+    './img/bg-7.jpg',
+    './js/bootstrap.js',
+    './js/bootstrap.min.js',
+    './js/jquery-3.2.1.min.js',
+    './js/mdb.js',
+    './js/mdb.min.js',
+    './js/popper.min.js',
+    './scss/core/bootstrap/_functions.scss',
+    './scss/core/bootstrap/_variables.scss',
+    './scss/core/_colors.scss',
+    './scss/core/_global.scss',
+    './scss/core/_helpers.scss',
+    './scss/core/_masks.scss',
+    './scss/core/_mixins.scss',
+    './scss/core/_typography.scss',
+    './scss/core/_variables.scss',
+    './scss/core/_waves.scss',
+    './scss/free/_animations-basic.scss',
+    './scss/free/_animations-extended.scss',
+    './scss/free/_badges.scss',
+    './scss/free/_buttons.scss',
+    './scss/free/_cards.scss',
+    './scss/free/_carousels.scss',
+    './scss/free/_dropdowns.scss',
+    './scss/free/_footers.scss',
+    './scss/free/_forms.scss',
+    './scss/free/_input-group.scss',
+    './scss/free/_list-group.scss',
+    './scss/free/_modals.scss',
+    './scss/free/_msc.scss',
+    './scss/free/_navbars.scss',
+    './scss/free/_pagination.scss',
+    './scss/free/_tables.scss',
+    './scss/_custom.scss',
+    './scss/mdb.scss'
+  ];
 
-let currencyFrom = document.getElementById('from');
-let currencyTo = document.getElementById('to');
-const CURRENCIES_URL = "https://free.currencyconverterapi.com/api/v5/currencies";
-const VALUES_URL  =  "https://free.currencyconverterapi.com/api/v5/convert?q=";
-let outputFrom = "";
-let outputTo = "";
-get(CURRENCIES_URL);
-let fromAmount = document.getElementById("fromAmount");
-let toAmount   = document.getElementById("toAmount");
+self.addEventListener('install', function(e) {
+  console.log('[ServiceWorker] Install');
 
-	
-	// function to detect an url
-    
-  function get (url)
-  {
-	  
-	  fetch(url)
-	  .then(
-	    fetchResult => {
-	      return fetchResult.text();
-	    },
-	    fetchError => {
-	      console.log("An error occurred during the Request", fetchError); 
-	    },
-	  )
-	  .then(
-	    	textResult => 
-			{
-			    let ret = JSON.parse(textResult);
-			    
-			    if(url == CURRENCIES_URL)
-			    {
-					
-					let results = ret.results;
-					let tab = [];
-					let results2 = {};
-					for(let key in results)
-					{
-						tab.push(key);
-					}
-					
-					tab.sort();
-					tab.forEach(k => results2[k] = results[k]);
-     	
-			     	for(let key in results2)
-				     	{
-				     		if(key == "EUR")
-				     		outputFrom += `
-				     			<option value="${key}" selected> ${results[key].currencyName} (${key}) </option>
-				     		`;
-				     		else
-				     			outputFrom += `
-				     			<option value="${key}"> ${results[key].currencyName} (${key}) </option>
-				     		`;
-
-				     		if(key == "XAF")
-				     		outputTo += `
-				     			<option value="${key}" selected> ${results[key].currencyName} (${key}) </option>
-				     		`;
-				     		else
-				     			outputTo += `
-				     			<option value="${key}"> ${results[key].currencyName} (${key}) </option>
-				     		`;
-				     	}
-					     	currencyFrom.innerHTML = outputFrom;
-					     	currencyTo.innerHTML = outputTo;			    	
-		    	}
-		    			if(url.startsWith(VALUES_URL))
-			    			{
-			    				let keys = url.split("=")[1].split(",")[0];
-			    				let values = JSON.parse(textResult).results[keys].val;
-  								let amount = fromAmount.value;
-  								let total = Number(values) * Number(amount);		
-  								toAmount.value = numberWithCommas(total);
-			    			}
-
-						},
-				    	parseError => 
-				    	{
-				      		console.log("An error occurred while parsing", parseError);
-				    	},
-			  		);  
-			  }
-
-
-						  fromAmount.addEventListener("input", function(){
-						 		let from = currencyFrom.value;
-						 		let to   = currencyTo.value;  
-
-						  		let convertString = from + "_" + to + "," + to + "_" + from;
-						  		get(VALUES_URL +convertString);
-						  });
-
-						 const numberWithCommas = (x) => {
-						  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-						}
-
-						currencyFrom.addEventListener("change", function()
-						{
-							let from = currencyFrom.value;
-						 		let to   = currencyTo.value;  
-
-						  		let convertString = from + "_" + to + "," + to + "_" + from;
-						  		get(VALUES_URL +convertString);
-						  	});
-
-						currencyTo.addEventListener("change", function()
-						{
-							let from = currencyFrom.value;
-						 		let to   = currencyTo.value;  
-
-						  		let convertString = from + "_" + to + "," + to + "_" + from;
-						  		get(VALUES_URL +convertString);
-						})
+  e.waitUntil(
+    caches.open(cacheName).then(function(cache) {
+        console.log('[ServiceWorker] Caching app shell');
+        return cache.addAll(filesToCache);
+    })
+  );
+});
 
 
 
-					 // initialization IndexedDb 
+// let cacheName = 'myFilesToCache-v2';
+// let filesToCache here
+// install event here
 
-					const dbPromise = idb.open('currencyConverter', 1, (upgradeDb) => {
-					    switch (upgradeDb.oldVersion) {
-					        case 0:
-					            upgradeDb.createObjectStore('countries', {
-					                keyPath: 'currencyId'
-					            });
-					        case 1:
-					            let countriesStore = upgradeDb.transaction.objectStore('countries');
-					            countriesStore.createIndex('country', 'currencyName');
-					            countriesStore.createIndex('country-code', 'currencyId');
-					        case 2:
-					            upgradeDb.createObjectStore('conversionRates', {
-					                keyPath: 'query'
-					            });
-					            let ratesStore = upgradeDb.transaction.objectStore('conversionRates');
-					            ratesStore.createIndex('rates', 'query');
-					    }
-					});
+self.addEventListener('activate', function(e) {
+    console.log('[ServiceWorker] Activate');
+
+    e.waitUntil(
+        caches.keys().then(function(keyList) {
+          return Promise.all(keyList.map(function(key) {
+            if (key !== cacheName) {
+              console.log('[ServiceWorker] Removing old cache', key);
+              return caches.delete(key);
+            }
+          }));
+        })
+    );
+
+    return self.clients.claim();
+});
 
 
-					document.addEventListener('DOMContentLoaded', () => {
-					    /*
-					     Fetch Countries 
-					      */
-					    fetch('https://free.currencyconverterapi.com/api/v5/countries')
-					        .then(res => res.json())
-					        .then(res => {
-					            Object.values(res.results).forEach(country => {
-					                dbPromise.then(db => {
-					                    const countries = db.transaction('countries', 'readwrite').objectStore('countries');
-					                    countries.put(country);
-					                })
-					            });
-					            dbPromise.then(db => {
-					                const countries = db.transaction('countries', 'readwrite').objectStore('countries');
-					                const countriesIndex = countries.index('country');
-					                countriesIndex.getAll().then(currencies => {
-					                })
-					            })
-					        }).catch(() => {
-					            dbPromise.then(db => {
-					                const countries = db.transaction('countries').objectStore('countries');
-					                const countriesIndex = countries.index('country');
-					                countriesIndex.getAll().then(currencies => {
-					                })
 
-					            });
-					        });
-					});
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;     // if valid response is found in cache return it
+        } else {
+          return fetch(event.request)     //fetch from internet
+            .then(function(res) {
+              return caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());    //save the response for future
+                  return res;   // return the fetched data
+                })
+            })
+            .catch(function(err) {       // fallback mechanism
+              return caches.open(CACHE_CONTAINING_ERROR_MESSAGES)
+                .then(function(cache) {
+                  return cache.match('./index.html');
+                });
+            });
+        }
+      })
+  );
+});      
+
+        
+        
+        // // '/ChallengeFin/font/Roboto-Bold.eot',
+        // // '/ChallengeFin/font/Roboto-Bold.ttf',
+        // // '/ChallengeFin/font/Roboto-Bold.woff',
+        // // '/ChallengeFin/font/Roboto-Bold.woff2',
+        // // '/ChallengeFin/font/Roboto-Light.eot',
+        // // '/ChallengeFin/font/Roboto-Light.ttf',
+        // // '/ChallengeFin/font/Roboto-Light.woff',
+        // // '/ChallengeFin/font/Roboto-Light.woff2',
+        // // '/ChallengeFin/font/Roboto-Medium.eot',
+        // // '/ChallengeFin/font/Roboto-Medium.ttf',
+        // // '/ChallengeFin/font/Roboto-Medium.woff',
+        // // '/ChallengeFin/font/Roboto-Medium.woff2',
+        // // '/ChallengeFin/font/Roboto-Regular.eot',
+        // // '/ChallengeFin/font/Roboto-Regular.ttf',
+        // // '/ChallengeFin/font/Roboto-Regular.woff',
+        // // '/ChallengeFin/font/Roboto-Regular.woff2',
+        // // '/ChallengeFin/font/Roboto-Thin.eot',
+        // // '/ChallengeFin/font/Roboto-Thin.ttf',
+        // // '/ChallengeFin/font/Roboto-Thin.woff',
+        // // '/ChallengeFin/font/Roboto-Thin.woff2',
+        // 
