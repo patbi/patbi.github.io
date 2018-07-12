@@ -1,122 +1,22 @@
-let log = console.log.bind(console);//bind our console to a variable
-let version = "0.0.1";
-let cacheName = "ChallengeFinBIYAGA";
-let cache = cacheName + "-" + version;
-let filesToCache = [
-    './',
-    './index.html',
-    './app.js',
-    './idb.js',
-    './css/bootstrap.css',
-    './css/bootstrap.min.css',
-    './css/mdb.css',
-    './css/mdb.min.css',
-    './css/style.css',
-    './css/style.min.css',
-    // 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-    // 'https://mdbootstrap.com/material-design-for-bootstrap/',
-//     './img/01.jpg',
-//     './img/bg-7.jpg',
-//     './js/bootstrap.js',
-//     './js/bootstrap.min.js',
-//     './js/jquery-3.2.1.min.js',
-//     './js/mdb.js',
-//     './js/mdb.min.js',
-//     './js/popper.min.js',
-//     './scss/core/bootstrap/_functions.scss',
-//     './scss/core/bootstrap/_variables.scss',
-//     './scss/core/_colors.scss',
-//     './scss/core/_global.scss',
-//     './scss/core/_helpers.scss',
-//     './scss/core/_masks.scss',
-//     './scss/core/_mixins.scss',
-//     './scss/core/_typography.scss',
-//     './scss/core/_variables.scss',
-//     './scss/core/_waves.scss',
-//     './scss/free/_animations-basic.scss',
-//     './scss/free/_animations-extended.scss',
-//     './scss/free/_badges.scss',
-//     './scss/free/_buttons.scss',
-//     './scss/free/_cards.scss',
-//     './scss/free/_carousels.scss',
-//     './scss/free/_dropdowns.scss',
-//     './scss/free/_footers.scss',
-//     './scss/free/_forms.scss',
-//     './scss/free/_input-group.scss',
-//     './scss/free/_list-group.scss',
-//     './scss/free/_modals.scss',
-//     './scss/free/_msc.scss',
-//     './scss/free/_navbars.scss',
-//     './scss/free/_pagination.scss',
-//     './scss/free/_tables.scss',
-//     './scss/_custom.scss',
-//     './scss/mdb.scss'
-  ];
-
-self.addEventListener('install', function(e) {
-  console.log('[ServiceWorker] Install');
-
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-        console.log('[ServiceWorker] Caching app shell');
-        return cache.addAll(filesToCache);
-    })
-  );
-});
-
-
-
-// let cacheName = 'myFilesToCache-v2';
-// let filesToCache here
-// install event here
-
-self.addEventListener('activate', function(e) {
-    console.log('[ServiceWorker] Activate');
-
-    e.waitUntil(
-        caches.keys().then(function(keyList) {
-          return Promise.all(keyList.map(function(key) {
-            if (key !== cacheName) {
-              console.log('[ServiceWorker] Removing old cache', key);
-              return caches.delete(key);
-            }
-          }));
-        })
-    );
-
-    return self.clients.claim();
-});
-
-
-
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        if (response) {
-          return response;     // if valid response is found in cache return it
-        } else {
-          return fetch(event.request)     //fetch from internet
-            .then(function(res) {
-              return caches.open(CACHE_DYNAMIC_NAME)
-                .then(function(cache) {
-                  cache.put(event.request.url, res.clone());    //save the response for future
-                  return res;   // return the fetched data
-                })
-            })
-            .catch(function(err) {       // fallback mechanism
-              return caches.open(CACHE_CONTAINING_ERROR_MESSAGES)
-                .then(function(cache) {
-                  return cache.match('./index.html');
-                });
-            });
-        }
-      })
-  );
-});      
-
-        
-        
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open('v1').then(function(cache) {
+      return cache.addAll([
+        './',
+        './index.html',
+        './app.js',
+        './idb.js',
+        './sw.js',
+        './index.js',        
+        './image-list.js',
+        // '/ChallengeFin/css/bootstrap.css',
+        // '/ChallengeFin/css/bootstrap.min.css',
+        // '/ChallengeFin/css/mdb.css',
+        // '/ChallengeFin/css/mdb.min.css',
+        // '/ChallengeFin/css/style.css',
+        // '/ChallengeFin/css/style.min.css',
+        // 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+        // 'https://mdbootstrap.com/material-design-for-bootstrap/',
         // // '/ChallengeFin/font/Roboto-Bold.eot',
         // // '/ChallengeFin/font/Roboto-Bold.ttf',
         // // '/ChallengeFin/font/Roboto-Bold.woff',
@@ -137,4 +37,63 @@ self.addEventListener('fetch', function(event) {
         // // '/ChallengeFin/font/Roboto-Thin.ttf',
         // // '/ChallengeFin/font/Roboto-Thin.woff',
         // // '/ChallengeFin/font/Roboto-Thin.woff2',
-        // 
+        // '/ChallengeFin/img/01.jpg',
+        // '/ChallengeFin/img/bg-7.jpg',
+        // '/ChallengeFin/js/bootstrap.js',
+        // '/ChallengeFin/js/bootstrap.min.js',
+        // '/ChallengeFin/js/jquery-3.2.1.min.js',
+        // '/ChallengeFin/js/mdb.js',
+        // '/ChallengeFin/js/mdb.min.js',
+        // '/ChallengeFin/js/popper.min.js',
+        // '/ChallengeFin/scss/core/bootstrap/_functions.scss',
+        // '/ChallengeFin/scss/core/bootstrap/_variables.scss',
+        // '/ChallengeFin/scss/core/_colors.scss',
+        // '/ChallengeFin/scss/core/_global.scss',
+        // '/ChallengeFin/scss/core/_helpers.scss',
+        // '/ChallengeFin/scss/core/_masks.scss',
+        // '/ChallengeFin/scss/core/_mixins.scss',
+        // '/ChallengeFin/scss/core/_typography.scss',
+        // '/ChallengeFin/scss/core/_variables.scss',
+        // '/ChallengeFin/scss/core/_waves.scss',
+        // '/ChallengeFin/scss/free/_animations-basic.scss',
+        // '/ChallengeFin/scss/free/_animations-extended.scss',
+        // '/ChallengeFin/scss/free/_badges.scss',
+        // '/ChallengeFin/scss/free/_buttons.scss',
+        // '/ChallengeFin/scss/free/_cards.scss',
+        // '/ChallengeFin/scss/free/_carousels.scss',
+        // '/ChallengeFin/scss/free/_dropdowns.scss',
+        // '/ChallengeFin/scss/free/_footers.scss',
+        // '/ChallengeFin/scss/free/_forms.scss',
+        // '/ChallengeFin/scss/free/_input-group.scss',
+        // '/ChallengeFin/scss/free/_list-group.scss',
+        // '/ChallengeFin/scss/free/_modals.scss',
+        // '/ChallengeFin/scss/free/_msc.scss',
+        // '/ChallengeFin/scss/free/_navbars.scss',
+        // '/ChallengeFin/scss/free/_pagination.scss',
+        // '/ChallengeFin/scss/free/_tables.scss',
+        // '/ChallengeFin/scss/_custom.scss',
+        // '/ChallengeFin/scss/mdb.scss',
+      ]);
+    })
+  );
+});
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(caches.match(event.request).then(function(response) {
+    if (response !== undefined) {
+      return response;
+    } else {
+      return fetch(event.request).then(function (response) {
+        let responseClone = response.clone();
+        
+        caches.open('v1').then(function (cache) {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      }).catch(function () {
+        return caches.match('./img/bg-7.jpg');
+      });
+    }
+  }));
+});
+
